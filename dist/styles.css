@@ -1,3 +1,19 @@
 body {
     font-family: 'Roboto', serif;
 }
+
+.circle-loader:empty {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    animation: spin 500ms linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
