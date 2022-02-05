@@ -12,13 +12,18 @@
     <button id="get-location">Use Current Location</button>
     <div id="location-test"></div>
 
-    <input type="number" name="zip-code" id="zip-code-input" placeholder="zip code">
-    <button id="zip-code-submit">submit</button>
-    <input type="text" name="city" id="city-input" placeholder="City">
-    <div id="city-list-container"></div>
-    <button>Submit</button>
+    <div class="zipcode-form-container">
+        <input type="number" name="zip-code" id="zip-code-input" placeholder="zip code">
+        <button id="zip-code-submit">Submit</button>
+    </div>
 
-    <div class="weather-container circle-loader"></div>
+    <div class="city-form-container">
+        <input type="text" name="city" id="city-input" placeholder="City">
+        <button id="city-search-submit">Search</button>
+        <div id="city-list-container"></div>
+    </div>
+
+    <div class="weather-container circle-loader">test</div>
 
     <script src="main.js"></script>
 </body>

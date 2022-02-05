@@ -2,6 +2,22 @@ body {
     font-family: 'Roboto', serif;
 }
 
+.city-entry {
+    display: flex;
+    max-width: fit-content;
+    padding: 1em;
+    gap: 1em;
+}
+
+.city-entry:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.city-entry:active {
+    transform: scale(1);
+}
+
 .circle-loader:empty {
     border: 8px solid #f3f3f3; /* Light grey */
     border-top: 8px solid #3498db; /* Blue */
@@ -11,6 +27,10 @@ body {
     width: 2em;
     height: 2em;
     animation: spin 500ms linear infinite;
+}
+
+.shadow {
+    box-shadow: 0px 15px 30px rgb(0 0 0 / 15%) ;
 }
 
 @keyframes spin {
