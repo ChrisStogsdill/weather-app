@@ -11,7 +11,6 @@ const units = 'imperial';
 const zipCode = 73130;
 let zipCodeData = {};
 let weatherData = {};
-let cityList = [];
 
 // function to clear city list container
 function clearCityListContainer() {
@@ -23,15 +22,18 @@ function clearCityListContainer() {
 
 // function to fetch weather info from open weather api
 function getWeather(tempLat = lat, tempLon = lon, tempUnits = units) {
-  fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${tempLat}&lon=${tempLon}&units=${tempUnits}&appid=90b04ea300e9c1626525544025aafc02`, { mode: 'cors' })
+  fetch(`http://api.openweathermap.org/data/2.5/onecall?lat=${tempLat}&lon=${tempLon}&units=${tempUnits}&appid=90b04ea300e9c1626525544025aafc02`, { mode: 'cors' })
     .then((response) => response.json())
     .then((data) => {
       weatherData = {
-        temp: data.main.temp,
-        humidity: data.main.humidity,
-        feelsLike: data.main.feels_like,
+      //   temp: data.main.temp,
+      //   humidity: data.main.humidity,
+      //   feelsLike: data.main.feels_like,
+      //   highTemp: data.main.temp_max,
+      //   lowTemp: data.main.temp_min,
+      //   precipitation: data,
       };
-      console.log(weatherData);
+      console.log(data);
     });
 }
 // function to get weather based on zip code
@@ -48,17 +50,20 @@ function getZipCodes(tempZip = 73130) {
 
 // function to get a list of cities
 function getCityList(tempCity) {
-  cityListContainer.classList.add('circle-loader')
-  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${tempCity}}&limit=15&appid=90b04ea300e9c1626525544025aafc02`, { mode: 'cors' })
+  // add circle loader class for loading animation
+  cityListContainer.classList.add('circle-loader');
+
+  // fetch the weather data
+  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${tempCity}}&limit=15&appid=90b04ea300e9c1626525544025aafc02`, { mode: 'cors' })
     .then((response) => response.json())
     .then((data) => {
       // set cityList variable
-      cityList = data;
+      const cityList = data;
 
       // clear any previous entries first
       clearCityListContainer();
 
-      // response if no resluts found
+      // response if no results found
       if (cityList.length === 0) {
         const response = cityListContainer.appendChild(document.createElement('div'));
         response.classList.add('shadow', 'city-entry');
@@ -76,9 +81,22 @@ function getCityList(tempCity) {
         const cityCountry = cityEntry.appendChild(document.createElement('p'));
         cityCountry.innerText = `Country: ${cityList[i].country}`;
 
-        // name: 'Test Valley', lat: 51.13379045, lon: -1.5182864265840892, country: 'GB', state: 'England'
+        // setup event listener for each of the entries
+        // uses capture instead of bubble to make sure child elements are not selected
+        cityEntry.addEventListener('click', (clickEvent) => {
+          const parent = clickEvent.currentTarget.parentElement;
+          const childrenArray = Array.from(parent.children);
+          const selectedIndex = childrenArray.indexOf(clickEvent.currentTarget);
+          const selectedCity = cityList[selectedIndex];
+
+          clearCityListContainer();
+
+          getWeather(selectedCity.lat, selectedCity.lon);
+        });
       }
     });
+  // remove circle loader class so that it does not constantly show loading after a selection
+  cityListContainer.classList.remove('circle-loader');
 }
 
 // function to set lat and lon from the geo location returned from setCurrentGeoPosition
@@ -104,5 +122,3 @@ citySearchSubmit.addEventListener('click', () => {
   getCityList(cityInput.value);
 });
 
-// http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-// http://api.openweathermap.org/geo/1.0/zip?zip={zip code},{country code}&appid={API key}
