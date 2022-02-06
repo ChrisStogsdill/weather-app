@@ -20,20 +20,40 @@ function clearCityListContainer() {
   }
 }
 
+// function to set weather
+function setWeather(setTemp, setHighTemp, setLowTemp, setPrecipitation, setUnits) {
+  const divTemp = document.getElementById('main-temp');
+  const divDegreeIcon = document.getElementById('degree-icon-container');
+  const divPrecipitation = document.getElementById('precipitation');
+  const divHighTemp = document.getElementById('high-temp');
+  const divLowTemp = document.getElementById('low-temp');
+  const precipitationChance = setPrecipitation * 100;
+
+  divTemp.innerHTML = `Temp: ${setTemp}<span>&#176;</span>`;
+  divPrecipitation.innerText = `Rain Chance: ${precipitationChance}%`;
+  divHighTemp.innerHTML = `High: ${setHighTemp}<span>&#176;</span>`;
+  divLowTemp.innerHTML = `Low: ${setLowTemp}<span>&#176;</span>`;
+}
+
 // function to fetch weather info from open weather api
 function getWeather(tempLat = lat, tempLon = lon, tempUnits = units) {
   fetch(`http://api.openweathermap.org/data/2.5/onecall?lat=${tempLat}&lon=${tempLon}&units=${tempUnits}&appid=90b04ea300e9c1626525544025aafc02`, { mode: 'cors' })
     .then((response) => response.json())
     .then((data) => {
       weatherData = {
-      //   temp: data.main.temp,
-      //   humidity: data.main.humidity,
-      //   feelsLike: data.main.feels_like,
-      //   highTemp: data.main.temp_max,
-      //   lowTemp: data.main.temp_min,
-      //   precipitation: data,
+        temp: data.current.temp,
+        feelsLike: data.current.feels_like,
+        highTemp: data.daily[0].temp.max,
+        lowTemp: data.daily[0].temp.min,
+        humidity: data.current.humidity,
+        precipitation: data.hourly[0].pop,
       };
-      console.log(data);
+      setWeather(
+        weatherData.temp,
+        weatherData.highTemp,
+        weatherData.lowTemp,
+        weatherData.precipitation,
+      );
     });
 }
 // function to get weather based on zip code
@@ -121,4 +141,3 @@ zipCodeSubmit.addEventListener('click', () => {
 citySearchSubmit.addEventListener('click', () => {
   getCityList(cityInput.value);
 });
-
